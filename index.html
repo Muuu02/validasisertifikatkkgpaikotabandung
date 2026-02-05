@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Validasi Sertifikat KKG</title>
+    
+    <link rel="icon" href="icokkg.png" type="image/png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --bg-color: #f8fafc;
+            --text-main: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%), 
+                              radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.05) 0px, transparent 50%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            padding: 45px 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+        }
+
+        /* LOGO UTAMA */
+        .top-logo-img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .verified-icon {
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+
+        p.subtitle {
+            font-size: 15px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 35px;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            padding: 18px 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            font-size: 16px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .form-control-custom:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        /* --- PERBAIKAN TOMBOL DISINI (Saya ganti nama class-nya jadi btn-utama) --- */
+        .btn-utama {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .btn-utama:active { transform: scale(0.98); }
+        .btn-utama:hover { opacity: 0.95; }
+        .btn-utama:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
+
+        .footer-text {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* Pop Up Hasil */
+        .modal-content { border-radius: 24px; border: none; overflow: hidden; }
+        .modal-header { border-bottom: 1px solid #f1f5f9; padding: 20px 24px; background: #fff; }
+        .modal-body { padding: 24px; background: #f8fafc; }
+        
+        .result-ticket {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .ticket-icon {
+            width: 42px;
+            height: 42px;
+            background: #eff6ff;
+            color: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .event-name { font-weight: 700; font-size: 14px; color: #1e293b; line-height: 1.4; margin-bottom: 4px; }
+        .participant-name { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 500; }
+        
+        .badge-status {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #059669;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        
+        .cert-no { font-size: 10px; color: #94a3b8; font-family: monospace; letter-spacing: 0.5px; }
+
+        .spinner-dots { display: flex; justify-content: center; gap: 6px; }
+        .dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <img src="logokkg.png" class="top-logo-img" alt="Logo KKG">
+        
+        <h1>
+            Validasi Sertifikat
+            <i class="bi bi-patch-check-fill verified-icon"></i>
+        </h1>
+        <p class="subtitle">KKG PAI Kota Bandung</p>
+
+        <input type="text" id="inputNama" class="form-control-custom" placeholder="Ketik nama Anda..." autocomplete="off">
+
+        <button onclick="cekData()" id="btnCek" class="btn-utama">
+            <span id="btnText">CEK DATA SAYA</span>
+            <div id="btnLoading" class="spinner-dots" style="display: none;">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+        </button>
+
+        <div class="footer-text">
+            &copy; 2026 KKG PAI Kota Bandung
+        </div>
+    </div>
+
+    <div class="modal fade" id="hasilModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="fw-bold mb-0" style="color:#0f172a;">Hasil Pencarian</h5>
+                        <small class="text-muted">Data validasi real-time</small>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalIsi">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ============================================
+        // ⚠️ PASTE ULANG LINK GOOGLE SCRIPT DISINI
+        // ============================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6o96v3Y9QMNAzXUsWON9fPgKrPGyUWHaQmzN1JRNl_nkSznh39zUdv0IZvnuXcM0z/exec"; 
+
+        var myModal = new bootstrap.Modal(document.getElementById('hasilModal'));
+
+        function cekData() {
+            var input = document.getElementById('inputNama');
+            var nama = input.value.trim();
+            
+            if(nama.length < 3) {
+                input.style.borderColor = "#ef4444";
+                input.classList.add('shake');
+                setTimeout(() => { 
+                    input.classList.remove('shake'); 
+                    input.style.borderColor = "#e2e8f0"; 
+                }, 500);
+                alert("Mohon ketik nama minimal 3 huruf.");
+                return;
+            }
+
+            var btnText = document.getElementById('btnText');
+            var btnLoad = document.getElementById('btnLoading');
+            var btn = document.getElementById('btnCek');
+
+            btnText.style.display = 'none';
+            btnLoad.style.display = 'flex';
+            btn.disabled = true;
+
+            fetch(SCRIPT_URL + "?nama=" + encodeURIComponent(nama))
+            .then(response => response.json())
+            .then(res => {
+                tampilkanHasil(res);
+                resetBtn();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Koneksi gagal. Coba cek internet Anda.");
+                resetBtn();
+            });
+        }
+
+        function resetBtn() {
+            document.getElementById('btnText').style.display = 'block';
+            document.getElementById('btnLoading').style.display = 'none';
+            document.getElementById('btnCek').disabled = false;
+        }
+
+        function tampilkanHasil(respon) {
+            var html = "";
+            
+            if (respon.status === "DITEMUKAN") {
+                html += `
+                    <div class="d-flex align-items-center mb-4 p-3 rounded-3" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+                        <i class="bi bi-check-circle-fill me-3 fs-3 text-success"></i>
+                        <div>
+                            <div class="fw-bold text-success">Data Ditemukan</div>
+                            <small class="text-muted">Menampilkan ${respon.data.length} riwayat kegiatan.</small>
+                        </div>
+                    </div>
+                `;
+
+                respon.data.forEach(item => {
+                    html += `
+                        <div class="result-ticket">
+                            <div class="ticket-icon">
+                                <i class="bi bi-trophy"></i>
+                            </div>
+                            <div style="flex:1;">
+                                <div class="event-name">${item.kegiatan}</div>
+                                <div class="participant-name">${item.nama}</div>
+                                
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 5px;">
+                                    <i class="bi bi-building"></i> ${item.instansi}
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-light">
+                                    <span class="cert-no">${item.noSertifikat}</span>
+                                    <span class="badge-status">TERDAFTAR</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+            } else {
+                html = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-search" style="font-size: 40px; color: #cbd5e1;"></i>
+                        <h5 class="fw-bold text-secondary mt-3">Tidak Ditemukan</h5>
+                        <p class="small text-muted mb-0 px-3">
+                            Maaf, nama <b>"${document.getElementById('inputNama').value}"</b> tidak ditemukan di database kami.
+                        </p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modalIsi').innerHTML = html;
+            myModal.show();
+        }
+    </script>
+</body>
+</html>
